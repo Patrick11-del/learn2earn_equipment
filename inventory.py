@@ -39,7 +39,7 @@ def add_resources():
     resources.append(dic)
 
 
-add_resources()  
+#add_resources()  
 print(resources)  
 
 
@@ -88,8 +88,70 @@ def borrow_resources():
         "resource_id": resource_id,
         "quantity": quantity
     })
-borrow_resources() 
+#borrow_resources() 
 
 print(resources)
-print(borrow_records)    
+print(borrow_records)  
+
+def return_resource():
+    fellow_id = input("Enter fellow ID: ")
+    resource_id = input("Enter resource ID: ")
+    quantity = int(input("Enter quantity to return: "))
+
+    if fellow_id not in fellows:
+        print("Fellow ID not found")
+        return
+
+    found_resource = None
+
+    for resource in resources:
+        if resource["id"] == resource_id:
+            found_resource = resource
+
+    if found_resource is None:
+        print("Resource ID not found")
+        return 
+
+    found_record = None
+
+    for record in borrow_records:
+        if record["fellow_id"] == fellow_id and record["resource_id"] == resource_id:
+            found_record = record
+            break
+
+    if found_record is None:
+        print("No borrow record found")
+        return 
+
+    if quantity <= 0:
+        print("Quantity must be greater than zero")
+        return    
+
+    if quantity > found_record["quantity"]:
+        print("Return quantity exceeds borrowed quantity")
+        return 
+
+    found_record["quantity"] -= quantity
+
+    found_resource["available"] += quantity   
+
+    if found_record["quantity"] == 0:
+        borrow_records.remove(found_record)
+
+print("Before borrowing:")
+print(resources)
+print(borrow_records)
+
+borrow_resources()
+
+print("After borrowing:")
+print(resources)
+print(borrow_records)
+
+return_resource()
+
+print("After returning:")
+print(resources)
+print(borrow_records)        
+
 
