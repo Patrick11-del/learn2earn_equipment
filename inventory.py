@@ -17,7 +17,14 @@ def add_resources():
     new_id = input("Enter resources ID: ")
     new_name = input("Enter resources name: ")
     new_category = input("Enter resources category: ")
-    quantity = int(input("Enter resources quantity: "))
+    try:
+        quantity = int(input("Enter resources quantity: "))
+    except ValueError:
+        print("Quantity must be a valid number") 
+        return
+    if quantity <= 0:
+        print("Quantity must be greater than zero")
+        return       
 
     for resource in resources:
         if resource["id"] == new_id:
@@ -40,7 +47,7 @@ def add_resources():
 
 
 #add_resources()  
-print(resources)  
+#print(resources)  
 
 
 def list_resources():
@@ -56,7 +63,11 @@ def list_resources():
 def borrow_resources():
     fellow_id = input("Enter fellow ID: ")
     resource_id = input("Enter resource ID: ")
-    quantity = int(input("Enter quantity: "))
+    try:
+        quantity = int(input("Enter quantity: "))
+    except ValueError:
+        print("Quantity must be a valid number")
+        return    
 
     if fellow_id not in fellows:
         print("Fellow ID not found")
@@ -88,15 +99,15 @@ def borrow_resources():
         "resource_id": resource_id,
         "quantity": quantity
     })
-#borrow_resources() 
-
-print(resources)
-print(borrow_records)  
 
 def return_resource():
     fellow_id = input("Enter fellow ID: ")
     resource_id = input("Enter resource ID: ")
-    quantity = int(input("Enter quantity to return: "))
+    try:
+        quantity = int(input("Enter quantity to return: "))
+    except ValueError:
+        print("Quantity must be a valid number")
+        return    
 
     if fellow_id not in fellows:
         print("Fellow ID not found")
@@ -138,20 +149,57 @@ def return_resource():
     if found_record["quantity"] == 0:
         borrow_records.remove(found_record)
 
-print("Before borrowing:")
-print(resources)
-print(borrow_records)
+def inventory_report():
 
-borrow_resources()
+    total_units = 0
+    available_units = 0
 
-print("After borrowing:")
-print(resources)
-print(borrow_records)
+    for resource in resources:
+        total_units += resource["total"]
+        available_units += resource["available"]
 
-return_resource()
-
-print("After returning:")
-print(resources)
-print(borrow_records)        
+    borrow_units = total_units - available_units   
+    print("Total unit", total_units)
+    print("Available unit", available_units)
+    print("Borrow units", borrow_units)    
 
 
+
+
+while True:
+    print("\n1. Add a resource")
+    print("2. List resources")
+    print("3. Borrow a resource")
+    print("4. Return a resource")
+    print("5. Inventory report")
+    print("6. Exit")
+
+    choice = input("Choose an option: ")
+
+    if choice == "6":
+        print("Goodbye!")
+        break
+       
+    elif choice == "1":
+        add_resources()
+    elif choice == "2":
+        list_resources()
+    elif choice == "3":
+        borrow_resources()
+    elif choice == "4":
+        return_resource()
+    elif choice == "5":
+        inventory_report()
+    else:
+        print("Invalid option. Please choose 1-6")        
+
+
+
+
+
+
+
+
+        
+
+        
