@@ -161,7 +161,34 @@ def inventory_report():
     borrow_units = total_units - available_units   
     print("Total unit", total_units)
     print("Available unit", available_units)
-    print("Borrow units", borrow_units)    
+    print("Borrow units", borrow_units) 
+
+    
+    print("Low-stock resources:")
+
+    for resource in resources:
+        if resource["available"] < 3:
+            print(resource["name"], "-", resource["available"], "available") 
+
+    borrowed_totals = {}
+
+    for record in borrow_records:
+        resource_id = record["resource_id"]
+
+        if resource_id not in borrowed_totals:
+            borrowed_totals[resource_id] = 0
+
+        borrowed_totals[resource_id] += record["quantity"]  
+
+    if borrowed_totals:
+        max_borrowed = max(borrowed_totals.values())
+
+        print("Most-borrowed resources:")
+        for resource in resources:
+            if borrowed_totals.get(resource["id"], 0) == max_borrowed:
+                print(resource["name"], "-", max_borrowed, "units borrowed")
+    else:
+        print("No borrowing records yet.")            
 
 
 
